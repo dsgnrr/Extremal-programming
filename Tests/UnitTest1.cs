@@ -7,6 +7,19 @@ namespace Tests
     [TestClass]
     public class UnitTest1
     {
+        [TestMethod]
+        public void TestToString()
+        {
+            Dictionary<int, String> testCases = new()
+            {
+                {1,"I" }
+            };
+            foreach (var pair in testCases)
+            {
+                Assert.AreEqual(pair.Value, new RomanNumber(pair.Key).ToString(), $"{pair.Key}.ToString()=={pair.Value}");
+            }
+        }
+
         private static Dictionary<String, int> parseTests = new()
         {
             {"I"     , 1  },
@@ -138,15 +151,15 @@ namespace Tests
             {"DLXXIX", 579},
             {"DLXXXIV", 584},
             {"DLXXXIX", 589},
-            {"DXCIV", 594},
-            {"DXCIX", 599},
-            {"CM", 900}
+            {"DXCIV ", 594},
+            {" DXCIX ", 599},
+            {"\nCM\t", 900}
 
 
 
         };
         [TestMethod]
-        public void TestRomanNumberParse()
+        public void TestRomanNumberParseValid()
         {
             /*Assert.AreEqual(        ///RomanNumber.Parse("I").Value == 1
                 1,                         // Значення, що очікується( що має бути, правильний варіант)
@@ -163,8 +176,78 @@ namespace Tests
                     $"{pair.Value}=={pair.Key}");
             }
         }
+
+        [TestMethod]
+        public void TestRomanNumberParseNonValid()
+        {
+            // Тестування з неправильними формами чисел
+            Assert.ThrowsException<ArgumentException>(
+                () => RomanNumber.Parse(""),
+                " ' ' -> Exception");
+            Assert.ThrowsException<ArgumentException>(
+                () => RomanNumber.Parse(null!),
+                " ' ' -> Exception");
+            //саме виключення, що виникло у лямбді, повертаеється як результат
+            var ex = Assert.ThrowsException<ArgumentException>(
+                () => RomanNumber.Parse("XBC"),
+                " ' ' -> Exception");
+            // вимагаємо, щоб відомості про неправильну цифру ('B') було
+            // включено у повідолмення виключення
+            Assert.IsTrue(ex.Message.Contains('B'), "ex.Message should Contain 'B' ");
+
+            Dictionary<String, char> testCases = new()
+            {
+                { "Xx",'x' }, 
+                { "Xy",'y' }, 
+                { "AX",'A' },
+                { "X C",' ' },
+                { "X\tC",'\t' },
+                { "X\nC",'\n' },
+            };
+            foreach (var pair in testCases)
+            {
+                // позбуваємось змінної ex  - робимо вкладені вирази
+                Assert.IsTrue(
+                    Assert.ThrowsException<ArgumentException>(
+                        () => RomanNumber.Parse(pair.Key),
+                        $" '{pair.Key}' -> ArgumentException").Message.Contains($"'{pair.Value}'"),
+                    $"'{pair.Key}' ex.Message should Contain '{pair.Value}' ");
+            }
+
+            // Якщо неправильних цифр декілька, то ми очікуємо будь-якої з них
+            // "ABC" - або 'A', або 'B'
+
+            ex = Assert.ThrowsException<ArgumentException>(
+                () => RomanNumber.Parse("ABC"),
+                " ' ' -> Exception");
+
+            Assert.IsTrue(
+                    ex.Message.Contains('A') || ex.Message.Contains('B'), $"'ABC' ex.Message should Contain 'A' or 'B'");
+            // + перевіримо, що повідомлення (виключення) не занадто коротке
+            // мову чи інші слова не встановлюємо, але щоб не одна літера —
+            // накладаємо умову на довжину повідомлення (15 літер)
+            Assert.IsFalse(ex.Message.Length < 15,"ex.Message.Length min 15");
+        }
     }
 }
+/*  Тестування виключень (exceptions)
+ *  У системі тестування виключення - провали тесту.
+ *  Тому вирази, що мають завершуватись виключеннями, отчують
+ *  функціональними виразами (лямбадми). Це дозволяє перенести появу виключення у середину тестового методу, де воно буде
+ *  оброблене належним чином.
+ *  Особливості:
+ *  —   перевіряється суворий збіг типів виключень, більш загальний тип не зараховується як проходження тесту
+ *  —   тест повертає викинуте виключення, це дозволяє накласти умови на повідомлення, причину, тощо
+ *  
+ *  
+ *  
+ *  Слухання:
+ *  які з комбінацій вважати правильними, які ні
+ *  'X C', ' XC', 'XC ', 'XC\t', '\nXC', 'XC\n', 'X\nC'
+ *    x      v      v      v        v       v       x
+ */
+
+
 /*  Основу модельних тестів складають твердження (Asserts).
  *  У твердженны фыгурують два значення: те, що очікується, та
  *  те, що одержується.

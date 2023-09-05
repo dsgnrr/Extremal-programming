@@ -8,6 +8,10 @@ namespace App
 {
     public class RomanNumber
     {
+        public RomanNumber(int value = 0)
+        {
+            this.Value = value;
+        }
         public int Value { get; set; } = 0;
         public static RomanNumber Parse(string input)
         {
@@ -15,11 +19,11 @@ namespace App
             {
                 throw new ArgumentException("NULL or empty input");
             }
+            input = input.Trim();
             int result = 0;
-            input = input.ToUpper();
             if (string.IsNullOrEmpty(input))
             {
-                throw new ArgumentNullException("Input exception", new Exception());
+                throw new ArgumentException("Input exception", new Exception());
             }
             if (input == "N") return new(); // Value = 0 --default
             int prev = 0;
@@ -29,18 +33,29 @@ namespace App
             {
                 current = input[i] switch
                 {
+                    'N'=>0,
                     'I' => 1,
                     'V' => 5,
                     'X' => 10,
                     'L' => 50,
-                    'C'=>100,
-                    'D'=>500,
-                    'M'=>1000
+                    'C' => 100,
+                    'D' => 500,
+                    'M' => 1000,
+                    _ => throw new ArgumentException($"Invalid Roman digit: '{input[i]}'")
                 };
                 result += prev > current ? -current : current;
                 prev = current;
             }
             return new() { Value = lastDigitIndex == 1 ? result * -1 : result };
+
+            /*  Правило "читання римських чисел:
+    *  Якщо цифра передує
+    *  більшій цифрі, то вона віднімається (IV, IX) — "І" передує більшій цифрі
+    *  меньшій або рівній — додається(VІ,ІІ,ХІ)
+    *  Решту правил ігноруємо — робимо максимально "дружній" інтерфейс
+    *  
+    *  Алгоритм — "заходимо" з правої цифрі, її завжди додаємо, запам'ятовуємо, і далі порівнюжмо з наступною цифрою
+    */
 
             #region Ideas
             //Value=input.Length для тестів "І", "ІІ", "ІІІ"
@@ -56,13 +71,12 @@ namespace App
             // =1 для тесту "І"
             #endregion
         }
-        /*  Правило "читання римських чисел:
-         *  Якщо цифра передує
-         *  більшій цифрі, то вона віднімається (IV, IX) — "І" передує більшій цифрі
-         *  меньшій або рівній — додається(VІ,ІІ,ХІ)
-         *  Решту правил ігноруємо — робимо максимально "дружній" інтерфейс
-         *  
-         *  Алгоритм — "заходимо" з правої цифрі, її завжди додаємо, запам'ятовуємо, і далі порівнюжмо з наступною цифрою
-         */
+
+        public override string ToString()
+        {
+            //  відобразити значення Value у формі римського числа
+            return "I";
+        }
+
     }
 }
