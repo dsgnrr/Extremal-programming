@@ -10,9 +10,24 @@ namespace Tests
         [TestMethod]
         public void TestToString()
         {
+           /* Створити тестові кейси для оптимальної форми римських чисел
+            * скласти 10 кейсів з різних числових діапазонів
+            * 0-10, 10-100, 100-1000, 1000-3000
+            * та з різною кількістю цифр у числі
+            */
             Dictionary<int, String> testCases = new()
             {
-                {1,"I" }
+                {1,"I" },
+                {29, "XXIX"},
+                {39, "XXXIX"},
+                {246, "CCXLVI"},
+                {378, "CCCLXXVIII"},
+                {1199, "MCXCIX"},
+                {1350, "MCCCL"},
+                {2247, "MMCCXLVII"},
+                {2499, "MMCDXCIX"},
+                {2700, "MMDCC"},
+                {2999, "MMCMXCIX"}
             };
             foreach (var pair in testCases)
             {
