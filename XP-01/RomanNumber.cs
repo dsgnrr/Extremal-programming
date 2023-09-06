@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -33,7 +34,7 @@ namespace App
             {
                 current = input[i] switch
                 {
-                    'N'=>0,
+                    'N' => 0,
                     'I' => 1,
                     'V' => 5,
                     'X' => 10,
@@ -74,9 +75,43 @@ namespace App
 
         public override string ToString()
         {
-            //  відобразити значення Value у формі римського числа
-            return "I";
+            //  відобразити значення Value у формі римського 
+            // головна ідея - послідовне зменшення початкового числа i
+            // формування результату
+            Dictionary<int, string> parts = new()
+            {
+                { 1000, "M" },
+                { 900, "CM" },
+                { 500, "D" },
+                { 400, "CD" },
+                { 100, "C" },
+                { 90, "XC" },
+                { 50, "L" },
+                { 40, "XL" },
+                { 10, "X" },
+                { 9, "IX" },
+                { 5, "V" },
+                { 4, "IV" },
+                { 1, "I" }
+            };
+            if (Value == 0) return "N";
+            bool isNegative = Value < 0;
+            
+            var number = isNegative?-Value:Value;
+            StringBuilder sb = new();
+            if (isNegative) sb.Append("-");
+            foreach (var part in parts)
+            {
+                while (number >= part.Key)
+                {
+                    sb.Append(part.Value);
+                    number -= part.Key;
+                }
+            }
+            return sb.ToString();
         }
+        //return "I";
+
 
     }
 }

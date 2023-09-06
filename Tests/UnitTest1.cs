@@ -27,12 +27,37 @@ namespace Tests
                 {2247, "MMCCXLVII"},
                 {2499, "MMCDXCIX"},
                 {2700, "MMDCC"},
-                {2999, "MMCMXCIX"}
+                {2999, "MMCMXCIX"},
+                { -2947, "-MMCMXLVII" },
+                { -2970, "-MMCMLXX" },
+                { -2730, "-MMDCCXXX" },
+                { -2756, "-MMDCCLVI" },
+                { -2767, "-MMDCCLXVII" },
+                { -2777, "-MMDCCLXXVII" },
+                { -2799, "-MMDCCXCIX" },
+                { -1603, "-MDCIII" },
+                { -1674, "-MDCLXXIV" },
+                { -1718, "-MDCCXVIII" },
+                { -1742, "-MDCCXLII" },
+                { -1747, "-MDCCXLVII" },
+                { -1784, "-MDCCLXXXIV" },
+                { -1796, "-MDCCXCVI" },
+                { -1884, "-MDCCCLXXXIV" },
+                { -1945, "-MCMXLV" },
+                { -1951, "-MCMLI" },
+                { -1972, "-MCMLXXII" },
+                { -1980, "-MCMLXXX" },
             };
             foreach (var pair in testCases)
             {
                 Assert.AreEqual(pair.Value, new RomanNumber(pair.Key).ToString(), $"{pair.Key}.ToString()=={pair.Value}");
             }
+            // Тест конструктора без аргументу
+            Assert.AreEqual(
+                "N",
+                new RomanNumber().ToString(),
+                $"new RomanNumber()=='N'"
+            );
         }
 
         private static Dictionary<String, int> parseTests = new()
