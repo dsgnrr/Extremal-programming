@@ -7,6 +7,26 @@ namespace Tests
     [TestClass]
     public class UnitTest1
     {
+
+        /* Д.З. Реалізувати крос-тести:
+    `   * генеруємо випадкове число (-3000 ... 3000),
+    `   * робимо його представлення у римській формі
+    `   * парсимо це представлення - маємо одержати початкове число
+    `   * повторити циклічно 256 разів
+    `   */
+
+        [TestMethod]
+        public void TestToStringXParse()
+        {
+            Random r = new();
+            for(int i = 0; i < 256; i++)
+            {
+                RomanNumber romanNumber = new(r.Next(-3000, 3000));
+                Assert.AreEqual(romanNumber.ToString(), 
+                    RomanNumber.Parse(romanNumber.ToString()).ToString(),
+                    "romanNumber.ToString() != RomanNumber.Parse(romanNumber.ToString)");
+            }
+        }
         [TestMethod]
         public void TestToString()
         {
