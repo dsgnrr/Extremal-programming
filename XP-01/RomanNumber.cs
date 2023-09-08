@@ -16,20 +16,44 @@ namespace App
         public int Value { get; set; } = 0;
         public static RomanNumber Parse(string input)
         {
-            if (String.IsNullOrEmpty(input))
+            input = input?.Trim()!;
+            if (string.IsNullOrEmpty(input))
             {
                 throw new ArgumentException("NULL or empty input");
             }
-            input = input.Trim();
-            int result = 0;
-            if (string.IsNullOrEmpty(input))
+
+            if (input == "N")
             {
-                throw new ArgumentException("Input exception", new Exception());
+                return new();  // Value = 0 --default
             }
-            if (input == "N") return new(); // Value = 0 --default
-            int prev = 0;
-            int current = 0;
             int lastDigitIndex = input[0] == '-' ? 1 : 0;
+
+            int maxDigit = 0;
+            int lessDigitsCount = 0;
+
+            
+            for (int i = input.Length - 1; i >= lastDigitIndex; i--)
+            {
+                int digitValue = DigitValue(input[i]);
+                if (digitValue < maxDigit)
+                {
+                    lessDigitsCount += 1;
+                    if (lessDigitsCount > 1)
+                    {
+                        throw new ArgumentException($"Invalid Roman digit: '{input[i]}'");
+                    }
+                }
+                else
+                {
+                    maxDigit = digitValue;
+                    lessDigitsCount = 0;
+                }
+            }
+
+
+            int result = 0;
+            int prev = 0, current = 0;
+
             for (int i = input.Length - 1; i >= lastDigitIndex; i--)
             {
                 current = input[i] switch
@@ -96,8 +120,8 @@ namespace App
             };
             if (Value == 0) return "N";
             bool isNegative = Value < 0;
-            
-            var number = isNegative?-Value:Value;
+
+            var number = isNegative ? -Value : Value;
             StringBuilder sb = new();
             if (isNegative) sb.Append("-");
             foreach (var part in parts)
@@ -111,7 +135,22 @@ namespace App
             return sb.ToString();
         }
         //return "I";
+        private static int DigitValue(char digit)
+        {
+            return digit switch
+            {
+                'N' => 0,
+                'I' => 1,
+                'V' => 5,
+                'X' => 10,
+                'L' => 50,
+                'C' => 100,
+                'D' => 500,
+                'M' => 1000,
+                _ => throw new ArgumentException($"Invalid Roman digit: '{digit}'")
+            };
 
+        }
 
     }
 }

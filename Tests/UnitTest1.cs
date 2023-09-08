@@ -109,7 +109,7 @@ namespace Tests
             {"MMXXIII",2023},
             { "CMD", 1400 },
             { "CLI", 151},
-            { "LID", 549},
+            { "DIL", 549},
             { "DID", 999},
             { "DMC", 600},
 
@@ -247,6 +247,9 @@ namespace Tests
             Assert.ThrowsException<ArgumentException>(
                 () => RomanNumber.Parse(null!),
                 " ' ' -> Exception");
+            Assert.ThrowsException<ArgumentException>(
+               () => RomanNumber.Parse(" "),
+               " ' ' -> Exception");
             //саме виключенн€, що виникло у л€мбд≥, повертаеЇтьс€ €к результат
             var ex = Assert.ThrowsException<ArgumentException>(
                 () => RomanNumber.Parse("XBC"),
@@ -287,6 +290,17 @@ namespace Tests
             // мову чи ≥нш≥ слова не встановлюЇмо, але щоб не одна л≥тера Ч
             // накладаЇмо умову на довжину пов≥домленн€ (15 л≥тер)
             Assert.IsFalse(ex.Message.Length < 15,"ex.Message.Length min 15");
+        }
+
+        [TestMethod]
+        public void TestRomanNumberParseIllegal()
+        {
+            String[] illegals = { "IIV", "IIX", "VVX", "IVX", "IIIX", "VIX" };
+            foreach (var illegal in illegals)
+            {
+                Assert.ThrowsException<ArgumentException>(() => RomanNumber.Parse(illegal), $"'{illegal}' -> Exception)");
+            }
+
         }
     }
 }
