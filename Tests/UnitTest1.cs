@@ -285,7 +285,12 @@ namespace Tests
                 " ' ' -> Exception");
 
             Assert.IsTrue(
-                    ex.Message.Contains('A') || ex.Message.Contains('B'), $"'ABC' ex.Message should Contain 'A' or 'B'");
+                    ex.Message.Contains('A') && ex.Message.Contains('B'), $"'ABC' ex.Message({ex.Message}) should Contain 'A' and 'B'");
+
+            // «м≥нюютьс€ правила - дл€ неправильних чисел вимагаЇмо перел≥к
+            // ус≥х цифр (символ≥в), що не Ї припустимими
+
+
             // + перев≥римо, що пов≥домленн€ (виключенн€) не занадто коротке
             // мову чи ≥нш≥ слова не встановлюЇмо, але щоб не одна л≥тера Ч
             // накладаЇмо умову на довжину пов≥домленн€ (15 л≥тер)
