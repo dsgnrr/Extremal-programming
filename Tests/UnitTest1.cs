@@ -25,6 +25,20 @@ namespace Tests
             Assert.AreEqual(30, r1.Add(r2).Value);
             Assert.AreEqual("XXX", r2.Add(r1).ToString());
             Assert.AreEqual(30, r2.Add(r1).Value);
+            
+            var ex =Assert.ThrowsException<ArgumentNullException>(
+                ()=> r1.Add(null!),
+                "r1.Add(null!) --> ArgumentNullException");
+            // "ex.Message contains 'Cannot Add null object'"
+
+            Assert.IsTrue(ex.Message.Contains(
+                "Cannot Add null object",
+                StringComparison.OrdinalIgnoreCase // реєстронезалежне порівняння
+                ),
+                $"ex.Message({ex.Message}) contains 'Cannot Add null object'");
+
+            // переконуємось у тому, що r2.Add(r1) це новий об'єкт, а не зміненний r2
+            Assert.AreNotSame(r2, r2.Add(r1), " Add() should return new item");
         }
 
 
@@ -315,7 +329,7 @@ namespace Tests
         [TestMethod]
         public void TestParseIllegal()
         {
-            String[] illegals = { "IIV", "IIX", "VVX", "IVX", "IIIX", "VIX" };
+            String[] illegals = { "IIV", "IIX", "VVX", "IVX", "IIIX", "VIX"};
             foreach (var illegal in illegals)
             {
                 Assert.ThrowsException<ArgumentException>(() => RomanNumber.Parse(illegal), $"'{illegal}' -> Exception)");
@@ -347,4 +361,17 @@ namespace Tests
  *  те, що одержується.
  *  Більшість тестів перевіряють рівність (об'єктну AreSame чи контентну AreEqual),
  *  або у скороченій формі (IsTrue, IsNotNul, ....)
+ */
+/* r1 + r2 + ... r10
+ * r1 + r2 -> r_tmp1
+ * r1 + r2 + r3 -> r_tmp1 + r3 -> r_tmp2 (r_tmp1 - garbage)
+ * ... + r4 -> r_tmp2 + r4 -> r_tmp3 (r_tmp2 - garbage)
+ * ------
+ * ... + r10 -> result (garbage: r_tmp1 - r_tmp8)
+ * додавання 10 чисел породжує 8 об'єктів які далі не потрібні
+ * 
+ * for() r += n[i] -- те ж саме (породження тимчасових об'єктів -- сміття)
+ * Вирішення - StringBuilder (для String)
+ * 
+ * 
  */

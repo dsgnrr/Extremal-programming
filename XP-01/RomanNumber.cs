@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace App
 {
-    public class RomanNumber
+    public record RomanNumber
     {
         private const char ZERO_DIGIT = 'N';
         private const char MINUS_SIGN = '-';
@@ -15,6 +15,8 @@ namespace App
         private const String INVALID_DIGIT_MESSAGE = "Invalid Roman digit(s):";
         private const String EMPTY_INPUT_MESSAGE= "NULL or empty input";
         private const String DIGITS_SEPARATOR = ", ";
+        private const String ADD_NULL_MESSAGE = "Cannot Add null object";
+        private const String NULL_MESSAGE_PATTERN = "{0}: '{1}'";
         public RomanNumber(int value = 0)
         {
             this.Value = value;
@@ -221,9 +223,21 @@ namespace App
             }
         }
 
-        public RomanNumber Add(RomanNumber romanNumber)
+        public RomanNumber Add(RomanNumber other)
         {
-            return new() { Value=30 };
+            if(other is null)
+            {
+                throw new ArgumentNullException(
+                    String.Format(
+                        NULL_MESSAGE_PATTERN,   // "{0}: {1}"
+                        ADD_NULL_MESSAGE,       // ->0
+                        nameof(other)           //      ->1
+                        )
+                    );
+            }
+            return this with { Value=this.Value + other.Value }; // new(this.Value+other.Value);
+            // клонування зі змінами this with { } - повне клонування
+            // this with { x = 10 } - х змінюється, а все інше - копіюється
         }
     }
 }
