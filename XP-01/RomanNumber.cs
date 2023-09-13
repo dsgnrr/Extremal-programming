@@ -9,6 +9,12 @@ namespace App
 {
     public class RomanNumber
     {
+        private const char ZERO_DIGIT = 'N';
+        private const char MINUS_SIGN = '-';
+        private const char DIGIT_QOUTE = '\'';
+        private const String INVALID_DIGIT_MESSAGE = "Invalid Roman digit(s):";
+        private const String EMPTY_INPUT_MESSAGE= "NULL or empty input";
+        private const String DIGITS_SEPARATOR = ", ";
         public RomanNumber(int value = 0)
         {
             this.Value = value;
@@ -21,11 +27,11 @@ namespace App
             CheckValidityOrThrow(input);
             CheckLegalityOrThrow(input);
 
-            if (input == "N")
+            if (input == ZERO_DIGIT.ToString())
             {
                 return new();  // Value = 0 --default
             }
-            int lastDigitIndex = input[0] == '-' ? 1 : 0;
+            int lastDigitIndex = input[0] == MINUS_SIGN ? 1 : 0;
             int result = 0;
             int prev = 0, current = 0;
 
@@ -121,12 +127,19 @@ namespace App
                 { 4, "IV" },
                 { 1, "I" }
             };
-            if (Value == 0) return "N";
+            if (Value == 0) 
+            {
+                return ZERO_DIGIT.ToString();
+            }
             bool isNegative = Value < 0;
 
             var number = isNegative ? -Value : Value;
             StringBuilder sb = new();
-            if (isNegative) sb.Append("-");
+            if (isNegative) 
+            { 
+                sb.Append(MINUS_SIGN); 
+            }
+
             foreach (var part in parts)
             {
                 while (number >= part.Key)
@@ -142,7 +155,7 @@ namespace App
         {
             return digit switch
             {
-                'N' => 0,
+                ZERO_DIGIT => 0,
                 'I' => 1,
                 'V' => 5,
                 'X' => 10,
@@ -150,7 +163,7 @@ namespace App
                 'C' => 100,
                 'D' => 500,
                 'M' => 1000,
-                _ => throw new ArgumentException($"Invalid Roman digit: '{digit}'")
+                _ => throw new ArgumentException($"{INVALID_DIGIT_MESSAGE} '{digit}'")
             };
 
         }
@@ -160,7 +173,7 @@ namespace App
             // із зміною вимог - залишити у повідомленні усі неправильні символи
             if (string.IsNullOrEmpty(input))
             {
-                throw new ArgumentException("NULL or empty input");
+                throw new ArgumentException(EMPTY_INPUT_MESSAGE);
             }
             if (input.StartsWith('-'))
             {
@@ -174,8 +187,8 @@ namespace App
             }
             if (invalidChars.Count > 0)
             {
-                String chars = String.Join(", ", invalidChars.Select(c => $"'{c}'"));
-                throw new ArgumentException($"Invalid Roman digits: {chars}");
+                String chars = String.Join(DIGITS_SEPARATOR, invalidChars.Select(c => $"{DIGIT_QOUTE}{c}{DIGIT_QOUTE}"));
+                throw new ArgumentException($"{INVALID_DIGIT_MESSAGE} {chars}");
             }
         }
 

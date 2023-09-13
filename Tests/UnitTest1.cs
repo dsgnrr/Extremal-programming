@@ -5,7 +5,7 @@ using System.Globalization;
 namespace Tests
 {
     [TestClass]
-    public class UnitTest1
+    public class UnitTestRomanNumber
     {
 
         /* Д.З. Реалізувати крос-тести:
@@ -16,13 +16,26 @@ namespace Tests
     `   */
 
         [TestMethod]
+        public void TestAdd()
+        {
+            RomanNumber r1 = new(10);
+            RomanNumber r2 = new(20);
+            Assert.IsInstanceOfType(r1.Add(r2), typeof(RomanNumber));
+            Assert.AreEqual("XXX", r1.Add(r2).ToString());
+            Assert.AreEqual(30, r1.Add(r2).Value);
+            Assert.AreEqual("XXX", r2.Add(r1).ToString());
+            Assert.AreEqual(30, r2.Add(r1).Value);
+        }
+
+
+        [TestMethod]
         public void TestToStringXParse()
         {
             Random r = new();
-            for(int i = 0; i < 256; i++)
+            for (int i = 0; i < 256; i++)
             {
                 RomanNumber romanNumber = new(r.Next(-3000, 3000));
-                Assert.AreEqual(romanNumber.ToString(), 
+                Assert.AreEqual(romanNumber.ToString(),
                     RomanNumber.Parse(romanNumber.ToString()).ToString(),
                     "romanNumber.ToString() != RomanNumber.Parse(romanNumber.ToString)");
             }
@@ -30,11 +43,11 @@ namespace Tests
         [TestMethod]
         public void TestToString()
         {
-           /* Створити тестові кейси для оптимальної форми римських чисел
-            * скласти 10 кейсів з різних числових діапазонів
-            * 0-10, 10-100, 100-1000, 1000-3000
-            * та з різною кількістю цифр у числі
-            */
+            /* Створити тестові кейси для оптимальної форми римських чисел
+             * скласти 10 кейсів з різних числових діапазонів
+             * 0-10, 10-100, 100-1000, 1000-3000
+             * та з різною кількістю цифр у числі
+             */
             Dictionary<int, String> testCases = new()
             {
                 {1,"I" },
@@ -218,8 +231,10 @@ namespace Tests
 
 
         };
+
+
         [TestMethod]
-        public void TestRomanNumberParseValid()
+        public void TestParseValid()
         {
             /*Assert.AreEqual(        ///RomanNumber.Parse("I").Value == 1
                 1,                         // Значення, що очікується( що має бути, правильний варіант)
@@ -238,7 +253,7 @@ namespace Tests
         }
 
         [TestMethod]
-        public void TestRomanNumberParseNonValid()
+        public void TestParseNonValid()
         {
             // Тестування з неправильними формами чисел
             Assert.ThrowsException<ArgumentException>(
@@ -260,8 +275,8 @@ namespace Tests
 
             Dictionary<String, char> testCases = new()
             {
-                { "Xx",'x' }, 
-                { "Xy",'y' }, 
+                { "Xx",'x' },
+                { "Xy",'y' },
                 { "AX",'A' },
                 { "X C",' ' },
                 { "X\tC",'\t' },
@@ -294,11 +309,11 @@ namespace Tests
             // + перевіримо, що повідомлення (виключення) не занадто коротке
             // мову чи інші слова не встановлюємо, але щоб не одна літера —
             // накладаємо умову на довжину повідомлення (15 літер)
-            Assert.IsFalse(ex.Message.Length < 15,"ex.Message.Length min 15");
+            Assert.IsFalse(ex.Message.Length < 15, "ex.Message.Length min 15");
         }
 
         [TestMethod]
-        public void TestRomanNumberParseIllegal()
+        public void TestParseIllegal()
         {
             String[] illegals = { "IIV", "IIX", "VVX", "IVX", "IIIX", "VIX" };
             foreach (var illegal in illegals)
