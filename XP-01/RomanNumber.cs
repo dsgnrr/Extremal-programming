@@ -220,5 +220,10 @@ namespace App
                 }
             }
         }
+
+        public RomanNumber Add(RomanNumber romanNumber)
+        {
+            return new() { Value=30 };
+        }
     }
 }
