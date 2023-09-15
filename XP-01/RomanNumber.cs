@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -181,6 +182,16 @@ namespace App
             {
                 input = input[1..];
             }
+
+            // вирішення проблеми з N
+            if (input.Contains(ZERO_DIGIT))
+            {
+                if (!input.StartsWith(ZERO_DIGIT))
+                {
+                    throw new ArgumentException($"{INVALID_DIGIT_MESSAGE} {DIGIT_QOUTE}{ZERO_DIGIT}{DIGIT_QOUTE}");
+                }
+            }
+
             List<char> invalidChars = new();
             foreach (char c in input)
             {

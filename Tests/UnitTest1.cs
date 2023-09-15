@@ -297,6 +297,14 @@ namespace Tests
 
             Dictionary<String, char> testCases = new()
             {
+                { "I-V",'-' },
+                { "VI-",'-'},
+                { "I-II",'-'},
+                { "VII-I",'-'},
+
+                { "VIINI",'N'}, // Тест не спрацював, тому зробив вирішення цієї проблеми
+                                // (див. CheckValidityOrThrow() у класі RomanNumber)
+
                 { "Xx",'x' },
                 { "Xy",'y' },
                 { "AX",'A' },
