@@ -239,5 +239,14 @@ namespace App
             // клонування зі змінами this with { } - повне клонування
             // this with { x = 10 } - х змінюється, а все інше - копіюється
         }
+        public static RomanNumber Sum(params RomanNumber[] romNumbers)
+        {
+            int result = 0;
+            foreach(var romanNumber in romNumbers)
+            {
+                result += romanNumber.Value;
+            }
+            return new(result);
+        }
     }
 }

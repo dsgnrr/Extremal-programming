@@ -16,6 +16,14 @@ namespace Tests
     `   */
 
         [TestMethod]
+        public void TestSum()
+        {
+            Assert.AreEqual("L",
+                RomanNumber.Sum(new(5), new(10), new(5), new(10), new(10), new(10)).ToString(),
+                "50 must be equal RomanNumber.Sum(...).ToStirng()");
+        }
+
+        [TestMethod]
         public void TestAdd()
         {
             RomanNumber r1 = new(10);
