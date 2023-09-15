@@ -11,7 +11,7 @@
 ## 11.09 Homework
 * Тест кейси для перевірки символів '-' та 'N' <br>
 ![alt text](https://github.com/dsgnrr/Extremal-programming/blob/master/XP-01/dz_screenshots/hw3/WrongZeroTestCases(TestParseNonValid).png)
-* Випралвення проблеми
+* Випралвення проблеми <br>
 ![alt text](https://github.com/dsgnrr/Extremal-programming/blob/master/XP-01/dz_screenshots/hw3/WrongZero.png)
-* Результати тесту
+* Результати тесту <br>
 ![alt text](https://github.com/dsgnrr/Extremal-programming/blob/master/XP-01/dz_screenshots/hw3/TestResult.png)
