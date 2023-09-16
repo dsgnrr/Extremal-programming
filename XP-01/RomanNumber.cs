@@ -13,11 +13,15 @@ namespace App
         private const char ZERO_DIGIT = 'N';
         private const char MINUS_SIGN = '-';
         private const char DIGIT_QOUTE = '\'';
-        private const String INVALID_DIGIT_MESSAGE = "Invalid Roman digit(s):";
+
+        private const String INVALID_DIGIT_MESSAGE = "Invalid Roman digit(s): ";
         private const String EMPTY_INPUT_MESSAGE= "NULL or empty input";
         private const String DIGITS_SEPARATOR = ", ";
         private const String ADD_NULL_MESSAGE = "Cannot Add null object";
+        private const string SUM_NULL_MESSAGE = "Invaild Sum() invocation with NULL argument";
         private const String NULL_MESSAGE_PATTERN = "{0}: '{1}'";
+        private const string INVALID_DATA_SUM_MESSAGE = "Invaild Sum() invocation with NULL argument: ";
+
         public RomanNumber(int value = 0)
         {
             this.Value = value;
@@ -153,7 +157,6 @@ namespace App
             }
             return sb.ToString();
         }
-        //return "I";
         private static int DigitValue(char digit)
         {
             return digit switch
@@ -252,12 +255,53 @@ namespace App
         }
         public static RomanNumber Sum(params RomanNumber[] romNumbers)
         {
-            int result = 0;
-            foreach(var romanNumber in romNumbers)
+            if(romNumbers is null)
             {
-                result += romanNumber.Value;
+                throw new ArgumentNullException(
+                    String.Format(
+                        NULL_MESSAGE_PATTERN,
+                        SUM_NULL_MESSAGE,
+                        nameof(romNumbers)
+                        )
+                    );
+            }
+
+            // return romNumbers.Aggregate((r1, r2) => r1.Add(r2));
+
+            // RomanNumber sum = new();
+            /*
+            for (int i = 0; i < romNumbers.Length; i++)
+            {
+                sum.Value += romNumbers[i].Value;
+            }*/
+            /*int res = 0;
+            foreach(var romNumber in romNumbers)
+            {
+                res += romNumber.Value;
+            }
+            return sum;*/
+
+            // мій варіант
+            int result = 0;
+            foreach (var romNumber in romNumbers)
+            {
+                result += romNumber.Value;
             }
             return new(result);
+
+
+            //return new(romNumbers.Sum(n => n.Value));
+
+
         }
+        /*public RomanNumber Add(params RomanNumber[] numbers)
+        {
+            RomanNumber sum = this;
+            for (int i = 0; i < numbers.Length; i++)
+            {
+                sum.Value += numbers[i].Value;
+            }
+            return sum;
+        }*/
     }
 }
