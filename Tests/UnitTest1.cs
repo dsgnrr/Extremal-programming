@@ -15,6 +15,114 @@ namespace Tests
     `   * повторити циклічно 256 разів
     `   */
 
+        /* Завдання. Eval.
+         * Розробити метод для обчислення результату одиночних операцій
+         * 1. Додавання. Очікувана семантика:
+         *     RomanNumber res = RomanNummber.Eval("IV + XL")
+         * 2. Віднімання
+         * 
+         * - Складаємо тести
+         *  = NotNull
+         *  = Type
+         *  = Algo (
+         *    1. З відомими рез-тами, 
+         *    2. Циклом з випадковими)
+         *  = Cross (
+         *    1. З Add, 
+         *    2. З Sum )
+         * - Реалізація з проходженням тестів
+         * - Рефакторинг
+         */
+        [TestMethod]
+        public void CrossTest()
+        {
+            Assert.AreEqual(RomanNumber.Sum(new(1), new(3)).Value, RomanNumber.Eval("I + III").Value,
+                "RomanNumber.Sum(new(1),new(3)).Value,RomanNumber.Eval(\"I + III\").Value");
+
+            RomanNumber r1 = new(3);
+            Assert.AreEqual(r1.Add(new(1)).Value, RomanNumber.Eval("I + III").Value,
+                "r1.Add(new(1)).Value,RomanNumber.Eval(\"I + III\").Value");
+        }
+
+        [TestMethod]
+        public void TestEvalType()
+        {
+            Assert.AreNotEqual(null!, RomanNumber.Eval("I+III"),
+                "RomanNumber.Eval(\"I+III\") != null");
+
+            Assert.IsInstanceOfType(RomanNumber.Eval("I+III"), typeof(RomanNumber));
+        }
+        [TestMethod]
+        public void TestEvalExceptions()
+        {
+            var ex = Assert.ThrowsException<ArgumentException>(
+             () => RomanNumber.Eval(null!),
+             "RomanNumber.Eval(null!) --> ArgumentException");
+
+            Assert.IsTrue(ex.Message.Contains("NULL or empty input", StringComparison.InvariantCultureIgnoreCase),
+               $"{ex.Message} must contains: 'NULL or empty input'");
+
+            ex = Assert.ThrowsException<ArgumentException>(
+             () => RomanNumber.Eval("expression"),
+             "RomanNumber.Eval(expression) --> ArgumentException");
+
+            Assert.IsTrue(ex.Message.Contains("Invalid expression", StringComparison.InvariantCultureIgnoreCase),
+                $"{ex.Message} must contains: 'Invalid expression'");
+        }
+        [TestMethod]
+        public void TestEvalAlgoResults()
+        { 
+            Assert.AreEqual(3, RomanNumber.Eval("I + II").Value,
+                $"RomanNumber.Eval(\"I + II\") == 3");
+
+            Random rnd = new();
+            RomanNumber r1 = new();
+            int result = 0;
+            string expression = "";
+            for (int i = 0; i < 256; i++)
+            {
+                r1.Value = rnd.Next(0, 3000);
+
+                result += r1.Value;
+                expression += r1.ToString();
+
+                expression+= rnd.Next(0, 2) == 1 ? "+" : "-";
+
+                r1.Value = rnd.Next(0, 3000);
+                if (expression.Contains('-'))
+                {
+                    result -= r1.Value;
+                }
+                else
+                {
+                    result += r1.Value;
+                }
+                expression += r1.ToString();
+
+                Assert.AreEqual(result, RomanNumber.Eval(expression).Value,
+                    $"{expression} => {result}");
+                expression = "";
+                result = 0;
+            }
+        }
+        [TestMethod]
+        public void TestEvalWrongExpressions()
+        {
+            Dictionary<string,int> testCases = new()
+            {
+                { "    XL    +    II    " ,42},
+                { "XL+II",42},
+                { "XL--II",42},
+                { "-X + II",-8},
+                { "-X+-II",-12}
+            };
+            foreach(var testCase in testCases) {
+                Assert.AreEqual(testCase.Value, RomanNumber.Eval(testCase.Key).Value,
+                    $"RomanNumber.Eval({testCase.Key}) => {testCase.Value}");
+            }
+            
+        }
+
         [TestMethod]
         public void TestSum()
         {
